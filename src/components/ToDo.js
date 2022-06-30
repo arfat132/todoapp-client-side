@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function ToDo() {
@@ -6,7 +6,7 @@ function ToDo() {
     const [listItems, setListItems] = useState([]);
     const [isUpdating, setIsUpdating] = useState('');
 
-    //add new todo item to database
+    
     const addItem = async (e) => {
         e.preventDefault();
         try {
@@ -18,6 +18,17 @@ function ToDo() {
         }
     }
 
+    useEffect(() => {
+        const getItemsList = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/')
+                setListItems(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        getItemsList()
+    }, []);
 
 
   
