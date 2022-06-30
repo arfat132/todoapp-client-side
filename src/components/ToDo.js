@@ -30,6 +30,16 @@ function ToDo() {
         getItemsList()
     }, []);
 
+    const deleteItem = async (id) => {
+        try {
+            const res = await axios.delete(`http://localhost:5000/${id}`)
+            const newListItems = listItems.filter(item => item._id !== id);
+            setListItems(newListItems);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
 
   
    
@@ -67,7 +77,7 @@ function ToDo() {
                                                     <p className="item-content ml-4">{item.item}</p>
                                                 </td>
                                                 <td className='ml-8'><button className="update-item" onClick={() => { setIsUpdating(item._id) }}>Update</button>
-                                                <button className="ml-4">Delete</button></td>
+                                                <button className="ml-4" onClick={() => { deleteItem(item._id) }}>Delete</button></td>
                                             </tr>
                                     }
                                 </div>
