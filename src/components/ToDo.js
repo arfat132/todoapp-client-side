@@ -67,7 +67,7 @@ const ToDo = () => {
                 <input type="checkbox" class="checkbox" />
             </label>
             <input className="input input-bordered w-full ml-4" type="text" placeholder="New Item" onChange={e => { setUpdateTodoText(e.target.value) }} value={updateTodoText} />
-            <button className="btn ml-4 bg-sky-700" type="submit">Update</button>
+            <button className="btn ml-4 bg-indigo-700" type="submit">Update</button>
         </form>
     )
 
