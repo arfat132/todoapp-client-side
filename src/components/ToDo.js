@@ -1,27 +1,24 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-function ToDo() {
-    const [itemText, setItemText] = useState('');
-    const [newDate, setNewDate] = useState('');
-    const [listItems, setListItems] = useState([]);
+import { BiEdit } from 'react-icons/bi';
+import { RiDeleteBin5Line } from 'react-icons/ri';
+const ToDo = () => {
+    const [todoText, setTodoText] = useState('');
+    const [todoList, setTodoList] = useState([]);
     const [isUpdating, setIsUpdating] = useState('');
-    const [updateItemText, setUpdateItemText] = useState('');
+    const [updateTodoText, setUpdateTodoText] = useState('');
 
     const addItem = async (e) => {
         e.preventDefault();
         const todo = {
-            item: itemText,
-            date: newDate,
-            checked: false
-
+            item: todoText
         }
         console.log(todo)
         try {
-            const res = await axios.post('https://thawing-journey-46311.herokuapp.com/',
+            const res = await axios.put('http://localhost:5000/',
                 todo)
-            setListItems(prev => [...prev, res.data]);
-            setItemText('');
+                setTodoList(prev => [...prev, res.data]);
+            setTodoText('');
         } catch (err) {
             console.log(err);
         }
@@ -30,8 +27,8 @@ function ToDo() {
     useEffect(() => {
         const getItemsList = async () => {
             try {
-                const res = await axios.get('https://thawing-journey-46311.herokuapp.com/')
-                setListItems(res.data);
+                const res = await axios.get('http://localhost:5000/')
+                setTodoList(res.data);
             } catch (err) {
                 console.log(err);
             }
@@ -42,9 +39,9 @@ function ToDo() {
 
     const deleteItem = async (id) => {
         try {
-            const res = await axios.delete(`https://thawing-journey-46311.herokuapp.com/${id}`)
-            const newListItems = listItems.filter(item => item._id !== id);
-            setListItems(newListItems);
+            const res = await axios.delete(`http://localhost:5000/${id}`)
+            const newListItems = todoList.filter(item => item._id !== id);
+            setTodoList(newListItems);
         } catch (err) {
             console.log(err);
         }
@@ -53,11 +50,11 @@ function ToDo() {
     const updateItem = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.put(`https://thawing-journey-46311.herokuapp.com/${isUpdating}`, { item: updateItemText })
+            const res = await axios.put(`http://localhost:5000/${isUpdating}`, { item: updateTodoText })
             console.log(res.data)
-            const updatedItemIndex = listItems.findIndex(item => item._id === isUpdating);
-            const updatedItem = listItems[updatedItemIndex].item = updateItemText;
-            setUpdateItemText('');
+            const updatedItemIndex = todoList.findIndex(item => item._id === isUpdating);
+            const updatedItem = todoList[updatedItemIndex].item = updateTodoText;
+            setUpdateTodoText('');
             setIsUpdating('');
         } catch (err) {
             console.log(err);
@@ -65,72 +62,64 @@ function ToDo() {
     }
 
     const updateTodohandle = () => (
-        <form className="p-4" onSubmit={(e) => { updateItem(e) }} >
+        <form className="p-4 flex shadow-lg border mb-6" onSubmit={(e) => { updateItem(e) }} >
             <label>
                 <input type="checkbox" class="checkbox" />
             </label>
-            <input className="input input-bordered w-full max-w-xs ml-4" type="text" placeholder="New Item" onChange={e => { setUpdateItemText(e.target.value) }} value={updateItemText} />
-            <button className="btn ml-4" type="submit">Update</button>
+            <input className="input input-bordered w-full ml-4" type="text" placeholder="New Item" onChange={e => { setUpdateTodoText(e.target.value) }} value={updateTodoText} />
+            <button className="btn ml-4 bg-sky-700" type="submit">Update</button>
         </form>
     )
 
-
-    const toggleTodo = (index) => {
-        const newTodoList = [...listItems];
-        newTodoList[index].checked = !newTodoList[index].checked;
-        setListItems(newTodoList);
-        addItem(newTodoList);
-    };
-
-    const getTodos = () => {
-        return listItems.filter((todo) => !todo.checked);
+    const updateTodo = (todo) => {
+        const data = { id: todo._id, done: !todo.done };
+        axios.post('http://localhost:5000/', data)
+            .then(() => {
+                const newTodos = todoList.map(t => {
+                    if (t._id === todo._id) {
+                        t.done = !t.done;
+                    }
+                    return t;
+                });
+                console.log(newTodos)
+                setTodoList([...newTodos]);
+            });
     }
 
 
+
     return (
-        <div className='mx-auto mt-12 w-[400px] lg:w-[1000px] lg:px-24 '>
-            <h1 className='text-xl font-bold capitalize mt-12 mb-6'>Todo List</h1>
+        <div className='mx-auto mt-12 w-[400px] lg:w-[800px] lg:px-24 '>
+            <h1 className='text-xl font-bold capitalize mt-12 mb-6 text-center'>Todo List</h1>
             <form className="mx-auto block lg:flex" onSubmit={e => addItem(e)}>
-                <input type="text" className='input input-bordered w-full max-w-xs mb-6 lg:mb-0' placeholder='Add Todo Item' onChange={e => { setItemText(e.target.value) }} value={itemText} />
-                <input type="date" className='input input-bordered w-full max-w-xs mb-6 lg:mb-0 lg:ml-4' onChange={e => { setNewDate(e.target.value) }} value={newDate} />
-                <button className='px-6 py-2.5 ml-2 rounded-lg bg-green-500 text-white font-bold' type="submit">Add</button>
+                <input type="text" className='input input-bordered w-full mb-6 lg:mb-0' placeholder='Add Todo Item' onChange={e => { setTodoText(e.target.value) }} value={todoText} />
             </form>
-            <div className="overflow-x-auto mx-auto mt-12 lg:w-[900px] ">
-                <table class="table w-full">
-                    <thead>
-                        <th className='grid grid-cols-4 gap-12'>
-                            <span className='ml-12 col-span-2'>Name</span>
-                            <span className=''>Time</span>
-                            <div>
-                                <span className='ml-8'>Update</span>
-                                <span className='ml-8'>Delete</span>
-                            </div>
-                        </th>
-                    </thead>
-                    <tbody>
-                        {
-                            getTodos().map((item, index) => (
-                                <div className="todo-item">
-                                    {
-                                        isUpdating === item._id
-                                            ? updateTodohandle()
-                                            : <tr className='grid grid-cols-4 gap-6'>
-                                                <td className='flex col-span-2'>
-                                                    <label>
-                                                        <input type="checkbox" onChange={() => toggleTodo(index)} class="checkbox" checked={item.checked} />
-                                                    </label>
-                                                    <p className="item-content ml-4">{item.item}</p>
-                                                </td>
-                                                <td> <p>{item.date}</p></td>
-                                                <td className='ml-8'><button className="update-item" onClick={() => { setIsUpdating(item._id) }}>Update</button>
-                                                    <button className="ml-4" onClick={() => { deleteItem(item._id) }}>Delete</button></td>
-                                            </tr>
-                                    }
-                                </div>
-                            ))
-                        }
-                    </tbody>
-                </table>
+            <div className="overflow-x-auto mx-auto mt-12">
+                {
+                    todoList.map((todo) => (
+                        <div className="">
+                            {
+                                isUpdating === todo._id
+                                    ? updateTodohandle()
+                                    :
+                                    <div className='flex justify-between p-5 shadow-lg border mb-6'>
+                                        <div className='flex'>
+                                            <label>
+                                                <input type={'checkbox'}
+                                                    checked={todo.done}
+                                                    onClick={() => updateTodo(todo)}
+                                                />
+                                            </label>
+                                            <p className="item-content ml-4 capitalize"> {todo.done ? <del>{todo.item}</del> : todo.item}</p>
+                                        </div>
+                                        <div className='ml-8'><button className="text-2xl" onClick={() => { setIsUpdating(todo._id) }}>{todo.done ? '' :<BiEdit />}</button>
+                                            <button className="ml-4 text-2xl" onClick={() => { deleteItem(todo._id) }}><RiDeleteBin5Line /></button>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                    ))
+                }
 
             </div>
         </div>

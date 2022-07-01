@@ -2,13 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 const CompletedTask = () => {
-    const [listItems, setListItems] = useState([]);
+    const [todoList, setTodoList] = useState([]);
 
     useEffect(() => {
         const getItemsList = async () => {
             try {
-                const res = await axios.get('https://thawing-journey-46311.herokuapp.com/')
-                setListItems(res.data);
+                const res = await axios.get('http://localhost:5000/')
+                setTodoList(res.data.filter(d => d.done === true));
             } catch (err) {
                 console.log(err);
             }
@@ -17,35 +17,24 @@ const CompletedTask = () => {
     }, []);
 
 
+
     return (
-        <div>
-            <div className="overflow-x-auto mx-auto mt-12 w-[400px] lg:w-[900px] ">
-                <table class="table w-full">
-                    <thead>
-                        <th className='grid grid-cols-2 gap-12'>
-                            <span className=''>Name</span>
-                            <span className=''>Time</span>
-                        </th>
-                    </thead>
-                    <tbody>
-                        {
-                            listItems.map((item, index) => (
-                                <div className="todo-item">
-                                    {<tr className='grid grid-cols-4 gap-6'>
-                                        <td className='flex col-span-2'>
-                                            <p className="item-content ml-4">{item.item}</p>
-                                        </td>
-                                        <td> <p>{item.date}</p></td>
-
-                                    </tr>
-                                    }
-                                </div>
-                            ))
+        <div className=" mx-auto mt-12 px-90 w-[400px] lg:w-[800px] lg:px-24 ">
+            <h1 className='text-2xl font-bold my-6 text-center'>Completed Task </h1>
+            {
+                todoList.map((item) => (
+                    <div className="">
+                        {<div className='p-5 shadow-lg border mb-6'>
+                            <div className='flex justify-between'>
+                                <p className="item-content ml-4 capitalize">{item.item}</p>
+                                <p className="item-content ml-4 capitalize">Completed</p>
+                            </div>
+                        </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+                ))
+            }
 
-            </div>
         </div>
     );
 };
