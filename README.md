@@ -10,6 +10,6 @@
 * Implemented todo completed task in another route
 * Implemented a calender route with react big calender
 
-# Technology used - Tailwind css, React.js, Node.js, Express.js, MongoDB, Mongoose, React icon, Axios
+### Technology used - Tailwind css, React.js, Node.js, Express.js, MongoDB, Mongoose, React icon, Axios
 
 
