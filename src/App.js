@@ -7,7 +7,7 @@ import CompletedTask from './components/CompletedTask';
 import Footer from './components/Footer';
 function App() {
   return (
-    <div className="App">
+    <div className="flex min-h-screen flex-col justify-between">
       <Navbar></Navbar>
       <Routes>
         <Route path="/" element={<ToDo />} />

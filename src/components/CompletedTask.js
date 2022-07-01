@@ -21,6 +21,7 @@ const CompletedTask = () => {
     return (
         <div className=" mx-auto mt-12 px-90 w-[400px] lg:w-[800px] lg:px-24 ">
             <h1 className='text-2xl font-bold my-6 text-center'>Completed Task </h1>
+            
             {
                 todoList.map((item) => (
                     <div className="">

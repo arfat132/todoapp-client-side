@@ -90,7 +90,7 @@ const ToDo = () => {
 
     return (
         <div className='mx-auto mt-12 w-[400px] lg:w-[800px] lg:px-24 '>
-            <h1 className='text-xl font-bold capitalize mt-12 mb-6 text-center'>Todo List</h1>
+            <h1 className='text-xl font-bold capitalize mb-6 text-center'>Todo List</h1>
             <form className="mx-auto block lg:flex" onSubmit={e => addItem(e)}>
                 <input type="text" className='input input-bordered w-full mb-6 lg:mb-0' placeholder='Add Todo Item' onChange={e => { setTodoText(e.target.value) }} value={todoText} />
             </form>
