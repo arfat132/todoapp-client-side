@@ -8,18 +8,18 @@ function ToDo() {
     const [isUpdating, setIsUpdating] = useState('');
     const [updateItemText, setUpdateItemText] = useState('');
 
-
     const addItem = async (e) => {
         e.preventDefault();
         const todo = {
             item: itemText,
             date: newDate,
+            checked: false
 
         }
         console.log(todo)
         try {
             const res = await axios.post('http://localhost:5000/',
-            todo)
+                todo)
             setListItems(prev => [...prev, res.data]);
             setItemText('');
         } catch (err) {
@@ -74,19 +74,33 @@ function ToDo() {
         </form>
     )
 
+
+    const toggleTodo = (index) => {
+        const newTodoList = [...listItems];
+        newTodoList[index].checked = !newTodoList[index].checked;
+        setListItems(newTodoList);
+        addItem(newTodoList);
+    };
+
+    const getTodos = () => {
+        return listItems.filter((todo) => !todo.checked);
+    }
+
+
     return (
-        <div className="App">
+        <div className='mx-auto mt-12 w-[400px] lg:w-[1000px] lg:px-24 '>
             <h1 className='text-xl font-bold capitalize mt-12 mb-6'>Todo List</h1>
-            <form className="form" onSubmit={e => addItem(e)}>
-                <input type="text" className='input input-bordered w-full max-w-xs' placeholder='Add Todo Item' onChange={e => { setItemText(e.target.value) }} value={itemText} />
-                <input type="date" className='input input-bordered w-full max-w-xs'  onChange={e => { setNewDate(e.target.value) }} value={newDate} />
+            <form className="mx-auto block lg:flex" onSubmit={e => addItem(e)}>
+                <input type="text" className='input input-bordered w-full max-w-xs mb-6 lg:mb-0' placeholder='Add Todo Item' onChange={e => { setItemText(e.target.value) }} value={itemText} />
+                <input type="date" className='input input-bordered w-full max-w-xs mb-6 lg:mb-0 lg:ml-4' onChange={e => { setNewDate(e.target.value) }} value={newDate} />
                 <button className='px-6 py-2.5 ml-2 rounded-lg bg-green-500 text-white font-bold' type="submit">Add</button>
             </form>
-            <div className="overflow-x-auto mx-auto mt-12 w-[400px] lg:w-[1000px] lg:px-24">
+            <div className="overflow-x-auto mx-auto mt-12 lg:w-[900px] ">
                 <table class="table w-full">
                     <thead>
-                        <th className='grid grid-cols-3 gap-12'>
+                        <th className='grid grid-cols-4 gap-12'>
                             <span className='ml-12 col-span-2'>Name</span>
+                            <span className=''>Time</span>
                             <div>
                                 <span className='ml-8'>Update</span>
                                 <span className='ml-8'>Delete</span>
@@ -95,19 +109,19 @@ function ToDo() {
                     </thead>
                     <tbody>
                         {
-                            listItems.map(item => (
+                            getTodos().map((item, index) => (
                                 <div className="todo-item">
                                     {
                                         isUpdating === item._id
                                             ? updateTodohandle()
-                                            : <tr className='grid grid-cols-3 gap-6'>
+                                            : <tr className='grid grid-cols-4 gap-6'>
                                                 <td className='flex col-span-2'>
                                                     <label>
-                                                        <input type="checkbox" class="checkbox" />
+                                                        <input type="checkbox" onChange={() => toggleTodo(index)} class="checkbox" checked={item.checked} />
                                                     </label>
                                                     <p className="item-content ml-4">{item.item}</p>
-                                                    <p>{item.date}</p>
                                                 </td>
+                                                <td> <p>{item.date}</p></td>
                                                 <td className='ml-8'><button className="update-item" onClick={() => { setIsUpdating(item._id) }}>Update</button>
                                                     <button className="ml-4" onClick={() => { deleteItem(item._id) }}>Delete</button></td>
                                             </tr>
