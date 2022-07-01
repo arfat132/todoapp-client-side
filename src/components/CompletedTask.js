@@ -7,7 +7,7 @@ const CompletedTask = () => {
     useEffect(() => {
         const getItemsList = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/')
+                const res = await axios.get('https://thawing-journey-46311.herokuapp.com/')
                 setListItems(res.data);
             } catch (err) {
                 console.log(err);

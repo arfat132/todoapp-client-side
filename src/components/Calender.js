@@ -24,11 +24,11 @@ const localizer = dateFnsLocalizer({
 const Calender = () => {
     const [item, setItem] = useState([]);
 
-console.log(item)
+    console.log(item)
     useEffect(() => {
         const getItemsList = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/')
+                const res = await axios.get('https://thawing-journey-46311.herokuapp.com/')
                 setItem(res.data);
             } catch (err) {
                 console.log(err);

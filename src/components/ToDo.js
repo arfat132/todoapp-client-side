@@ -18,7 +18,7 @@ function ToDo() {
         }
         console.log(todo)
         try {
-            const res = await axios.post('http://localhost:5000/',
+            const res = await axios.post('https://thawing-journey-46311.herokuapp.com/',
                 todo)
             setListItems(prev => [...prev, res.data]);
             setItemText('');
@@ -30,7 +30,7 @@ function ToDo() {
     useEffect(() => {
         const getItemsList = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/')
+                const res = await axios.get('https://thawing-journey-46311.herokuapp.com/')
                 setListItems(res.data);
             } catch (err) {
                 console.log(err);
@@ -42,7 +42,7 @@ function ToDo() {
 
     const deleteItem = async (id) => {
         try {
-            const res = await axios.delete(`http://localhost:5000/${id}`)
+            const res = await axios.delete(`https://thawing-journey-46311.herokuapp.com/${id}`)
             const newListItems = listItems.filter(item => item._id !== id);
             setListItems(newListItems);
         } catch (err) {
@@ -53,7 +53,7 @@ function ToDo() {
     const updateItem = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.put(`http://localhost:5000/${isUpdating}`, { item: updateItemText })
+            const res = await axios.put(`https://thawing-journey-46311.herokuapp.com/${isUpdating}`, { item: updateItemText })
             console.log(res.data)
             const updatedItemIndex = listItems.findIndex(item => item._id === isUpdating);
             const updatedItem = listItems[updatedItemIndex].item = updateItemText;
